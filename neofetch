@@ -53,7 +53,7 @@ read -rd '' config <<'EOF'
 # See this wiki page for more info:
 # https://github.com/dylanaraps/neofetch/wiki/Customizing-Info
 print_info() {
-    info title
+    fig $HOSTNAME
     info underline
 
     info "OS" distro
@@ -4442,6 +4442,15 @@ to_off() {
 
 # TEXT FORMATTING
 
+fig() {
+	(	IFS='\n';
+		while read line; do
+			# echo "$line";
+			prin "$line"
+		done < <(figlet $HOSTNAME | sed -e 's/\\/\\\\/g')
+	)
+}
+
 info() {
     # Save subtitle value.
     [[ "$2" ]] && subtitle="$1"
@@ -4486,7 +4495,8 @@ prin() {
         local subtitle_color="$info_color"
     fi
 
-    string="$(trim "${string//$'\e[0m'}")"
+    # string="$(trim "${string//$'\e[0m'}")"
+    string="${string//$'\e[0m'}"
     length="$(strip_sequences "$string")"
     length="${#length}"
 
